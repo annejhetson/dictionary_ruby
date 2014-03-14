@@ -1,11 +1,15 @@
 class Term
 
   @@all_terms = []
-  @@all_definitions = []
 
   def initialize(word, definition)
     @word = word
-    @definition = definition
+    @definition = []
+    @definition << definition
+  end
+  
+  def add(definition)
+    @definition << definition
   end
 
   def Term.create(word, definition)
@@ -17,10 +21,10 @@ class Term
   def word
     @word
   end
-
+  
   def definition
-    @definition
-  end
+    @definition.join('; ')
+   end
 
   def Term.all
     @@all_terms
@@ -31,13 +35,13 @@ class Term
   end
 
   def Term.search(searchword)
-    # @search_word = searchword
-    Term.all.each do |term|
+      Term.all.each do |term|
       if term.word == searchword
-         return term.word
-        # i.word + " " + i.definition
+        return term.word + ": " + term.definition
+     # elsif term.definition == searchword
+      #  return term.word + ": " + term.definition
       end
     end
   end
-end
+ end
 

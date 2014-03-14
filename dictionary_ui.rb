@@ -5,28 +5,26 @@ require './lib/dictionary'
 def main_menu
   puts "Welcome to the Word Repository. What is your name?\n\n"
   @name = gets.capitalize.chomp
+  puts "\n\nHow may we help you, #{@name}?\n\n"
   top_menu
 end
 
 def top_menu
-  puts "\n\nHow may we help you, #{@name}?\n\n"
-  puts "To enter a new Term, please press 'T'. To see all terms, please press 'S'. \n\n"
-  puts "To find a specific word, please press 'F'. To exit the Word Repository, please press 'X'.\n\n"
+  puts "To create a new Term, please press 'T'."
+  puts "To see all terms, please press 'A'."
+  puts "To find a specific word or definition, please press 'F'."
+  puts "To exit, please press 'X'.\n\n"
   entry = gets.chomp
   case entry
   when 't', 'T'
     enter_term
-  when 's', 'S'
+  when 'A', 'a'
     see_term
   when 'f', 'F'
     search_menu
   when 'x', 'X'
-    puts "We hope you enjoyed your time with us, #{@name}!\n"
-  when 'o','O'
-    puts "You have entered a secret keyword. You are being hypnotized. You are getting sleeeeeepy.\n"
-    puts "*****ZZZZzzzzzz*****"
+    puts "d(^o^)b¸¸Good-bye..♬·¯·♩¸¸♪·¯·♫¸¸\n\n"
   else
-    puts "I'm sorry, I can't do that, #{@name}. Please try again.\n\n"
     top_menu
   end
 end
@@ -36,23 +34,44 @@ def enter_term
   word = gets.chomp
   puts "What is the definition of #{word}?\n"
   definition = gets.chomp
-  puts "Great! We have added #{word} with the definition of '#{definition}'. Thank you for your entry!\n\n"
+  puts "Great! We have added #{word} with the definition of '#{definition}'.\n\n"
   new_term = Term.create(word, definition)
-  see_term
+
+  add_definition(new_term, word)
+end
+
+def add_definition(new_term, word)
+  puts "To enter another definition, press 'N'"
+  puts "To return to the main menu, press 'M'\n"
+  entry = gets.downcase.chomp
+  case entry 
+    when 'm'
+    top_menu   
+    when 'n'
+    puts "Enter another definition for #{word}:\n"
+    new_definition = gets.chomp
+    new_term.add(new_definition)
+    
+    add_definition(new_term, word)
+  end
 end
 
 def see_term
-  puts "#{@name}, here is a list of all your BEAUTIFUUUUL terms!!!! \n"
+  puts "#{@name}, here is a list of all the terms. \n"
   puts "---------------------------------------------------- \n"
   Term.all.each_with_index do |term, index|
     puts "#{index+1}. #{term.word} - #{term.definition}"
     end
-  puts "---------------------------------------------------- \n"
+  puts "---------------------------------------------------- \n\n"
   edit_option
 end
 
 def edit_option
-  puts "If you made a mistake and need to edit a term, please press 'E'. If you want to add another term, please press 'T'. If you want to delete a term, please press 'D'. Otherwise press any key to be taken to the previous menu.\n\n"
+  puts "To edit a term, please press 'E'.
+        To add another term, please press 'T'.
+        To delete a term, please press 'D'.
+        To exit, please press 'X'
+        Press any key to be taken to the previous menu.\n\n"
   entry = gets.chomp
   case entry
   when 'e', 'E'
@@ -61,19 +80,22 @@ def edit_option
     enter_term
   when 'd', 'D'
     delete_menu
+  when 'x', 'X'
+    puts "d(^o^)b¸¸Good-bye..♬·¯·♩¸¸♪·¯·♫¸¸\n\n"
   else
     top_menu
   end
 end
 
 def edit_menu
-  puts "Oh no! Did we make a mistake? Please choose the number of the entry you would like to edit!\n"
+  puts "Oh no! Did we make a mistake? Please choose the number of the entry you would like to edit!\n\n"
+  puts "---------------------------------------------------- \n"
   Term.all.each_with_index do |term, index|
     puts "#{index+1}. #{term.word} - #{term.definition}"
-  end
-  entry = gets.chomp.to_i
-  puts "---------------------------------------------------- \n"
-  puts "Would you like to edit the word '#{Term.all[entry-1].word}'? Press 'W'.\n"
+    end
+  puts "---------------------------------------------------- \n\n"
+  entry = gets.chomp.to_i 
+  puts "\n\nWould you like to edit the word '#{Term.all[entry-1].word}'? Press 'W'.\n"
   puts "Or would you like to edit the definition, '#{Term.all[entry-1].definition}'? Press 'D'.\n"
   puts "---------------------------------------------------- \n"
   entry2 = gets.chomp
@@ -106,10 +128,17 @@ end
 def search_menu
   puts "What word would you like to find the definition of?"
   search_term = gets.chomp
-  Term.search(search_term)
+  result = Term.search(search_term)
   puts "\n\n Searching! ¸.·´¯`·.´¯`·.¸¸.·´¯`·.¸><(((º>\n\n"
-  if term.word == search_term
-    puts "Good news! The "
+  if result == nil
+    puts "\n\n٩(͡๏̯͡๏)۶\n\n"
+    puts "Sorry, we didn't find that word in this repository. How about entering it?\n\n"
+    top_menu
+  else 
+    puts result "\n\n"
+    top_menu
+  end
+
 
 
 
